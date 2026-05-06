@@ -7,6 +7,7 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 import VideoCallIcon from '@mui/icons-material/VideoCall';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import PersonIcon from '@mui/icons-material/Person';
+import { Link } from 'react-router-dom';
 
 const Navbar = ({setSideNavbarFunc, sideNavbar}) => {
   const [userPic,setUserPic] = useState("https://th.bing.com/th/id/OIP.Wy2uo_y-ttULYs4chLmqSAAAAA?rs=1&pid=ImgDetMain")
@@ -28,10 +29,11 @@ const Navbar = ({setSideNavbarFunc, sideNavbar}) => {
         </div>
           
 
-        <div className="navbar_youtubeImg">
+        <Link to={"/"} className="navbar_youtubeImg">
           <YouTubeIcon sx={{ fontsize: "34px" }} className='navbar_youtubeImage' />
-          <div className='navbar_youtubeTitle'>Youtube</div>
-        </div>
+          <div className='navbar_youtubeTitle'>ChiTube</div>
+        </Link>
+
       </div>
 
       <div className="navbar-middle">

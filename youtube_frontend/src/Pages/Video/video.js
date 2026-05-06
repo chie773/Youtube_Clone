@@ -2,124 +2,185 @@ import React, { useState, useEffect } from 'react'
 import './video.css';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbDownAltOutlinedIcon from '@mui/icons-material/ThumbDownAltOutlined';
-import { Link } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import {toast,ToastContainer} from 'react-toastify'
+
+
+
 const Video = () => {
-    const [message, setMessage] = useState("");
-    const [data, setData] = useState(null);
-    const [videoUrl, setVideoURL] = useState("");
-    const { id } = useParams();
-    const [comments, setComments] = useState([]);
+    // const [message, setMessage] = useState("");
+    // const [data, setData] = useState(null);
+    // const [videoUrl, setVideoURL] = useState("");
+    // const { id } = useParams();
+    // const [comments, setComments] = useState([]);
 
-    const fetchVedioById = async () => {
-        await axios.get(`http://localhost:4000/api/getVideoById/${id}`).then((response) => {
-            console.log(response.data.video);
-            setData(response.data.video)
-            setVideoURL(response.data.video.videoLink)
-        }).catch(err => {
-            console.log(err);
-        })
-    }
+    // const fetchVedioById = async () => {
+    //     await axios.get(`http://localhost:4000/api/getVideoById/${id}`).then((response) => {
+    //         console.log(response.data.video);
+    //         setData(response.data.video)
+    //         setVideoURL(response.data.video.videoLink)
+    //     }).catch(err => {
+    //         console.log(err);
+    //     })
+    // }
 
-    const getCommentByVideoId = async () => {
-        await axios.get(`http://localhost:4000/commentApi/comment/${id}`).then((response) => {
-            console.log(response);
-            setComments(response.data.comments)
-        }).catch(err => {
-            console.log(err);
-        })
-    }
-    useEffect(() => {
-        fetchVedioById();
-        getCommentByVideoId();
-    }, [])
+    // const getCommentByVideoId = async () => {
+    //     await axios.get(`http://localhost:4000/commentApi/comment/${id}`).then((response) => {
+    //         console.log(response);
+    //         setComments(response.data.comments)
+    //     }).catch(err => {
+    //         console.log(err);
+    //     })
+    // }
+    // useEffect(() => {
+    //     fetchVedioById();
+    //     getCommentByVideoId();
+    // }, [])
 
-    const handleComment = async()=>{
-        const body = {
-            "message":message,
-            "video":id
-        }
-        await axios.post('http://localhost:4000/commentApi/comment',body, { withCredentials: true }).then((resp)=>{
-            console.log(resp)
-            const newComment = resp.data.comment;
-            setComments([newComment,...comments]);
-            setMessage("")
-        }).catch(err=>{
-            toast.error("Please Login First to comment")
-        })
-    }
+    // const handleComment = async()=>{
+    //     const body = {
+    //         "message":message,
+    //         "video":id
+    //     }
+    //     await axios.post('http://localhost:4000/commentApi/comment',body, { withCredentials: true }).then((resp)=>{
+    //         console.log(resp)
+    //         const newComment = resp.data.comment;
+    //         setComments([newComment,...comments]);
+    //         setMessage("")
+    //     }).catch(err=>{
+    //         toast.error("Please Login First to comment")
+    //     })
+    // }
     return (
         <div className='video'>
-            <div className="videoPostSection">
-                <div className="video_youtube">
-                    {data && <video width="400" controls autoPlay className='video_youtube_video'>
+            <div className='videoPostSection>'>
+                <div className='video_youtube'>
+                    <video width="400" controls autoPlay className='video_youtube_video'>
 
-                        {/* Please watch the video for the code} */}
-                    </video>}
+                        {/* Put Video Links here */}
+
+
+                        Your browser does not support the video tag
+                    </video>
 
                 </div>
 
                 <div className="video_youtubeAbout">
-                    <div className="video_uTubeTitle">{data?.title}</div>
+                    <div className="video_uTubeTitle">{"Best Ways to invest in the stock Market"}</div>
 
                     <div className="youtube_video_ProfileBlock">
                         <div className="youtube_video_ProfileBlock_left">
-                            <Link to={`/user/${data?.user?._id}`} className="youtube_video_ProfileBlock_left_img">
-                                <img className='youtube_video_ProfileBlock_left_image' src={data?.user?.profilePic} />
-                            </Link>
+                            <Link to={"/User/1"} className='youtube_video_ProfileBlock_left_img' src="/images/thumbnail1.jpeg" />
+                            
                             <div className="youtubeVideo_subsView">
-                                <div className="youtubePostProfileName"> {data?.user?.channelName} </div>
-                                <div className="youtubePostProfileSubs">{data?.user?.createdAt.slice(0, 10)}</div>
+                                <div className="youtubePostProfileName"> {"data?.user?.channelName"} </div>
+                                <div className="youtubePostProfileSubs">{"57"}</div>
                             </div>
                             <div className="subscribeBtnYoutube">Subscribe</div>
                         </div>
 
                         <div className="youtube_video_likeBlock">
-                            {/* Please watch the video for the code} */}
-
-
-
+                            <ThumbUpOutlinedIcon />
+                            <div className='youtube_video_likeBlock_NoOfLikes'>{32}</div>
                         </div>
+                        <div className="youtubeVideoDivider"></div>
 
+                        <div className="youtube_video_likeBlock">
+                            <ThumbDownAltOutlinedIcon />
+                        </div>
 
                     </div>
 
                     <div className="youtube_video_About">
-                        <div>{data?.createdAt.slice(0, 10)}</div>
-                        <div>{data?.description}</div>
+                        <div>{"Cool Video"}</div>
+                        <div>{"Cool Desciritpon"}</div>
                     </div>
                 </div>
 
                 <div className="youtubeCommentSection">
-                    <div className="youtubeCommentSectionTitle">{comments.length} Comments</div>
+                    <div className="youtubeCommentSectionTitle">{"{Insert Amount Of Comments}"} Comments</div>
 
                     <div className="youtubeSelfComment">
-                        {/* Please watch the video for the code} */}
+                        <img className='video_youtubeSelfCommentProfile' src="/images/thumbnail1.jpeg" />
+                        <div className='addAComment'>
+                            <input type='text' className='addAcommentInput' placeholder='Add a comment' />
+
+                            <div className='cancelSubmitComment'>
+                                <div className="cancelComment">Cancel</div>
+                                <div className="cancelComment">Comment</div>
+                                
+
+                            </div>
+
+
+                        </div>
 
                     </div>
 
                     <div className="youtubeOthersComments">
 
-                        {
-                            comments.map((item, index) => {
-                                return (
-                                    <div className="youtubeSelfComment">
-                                        <img className='video_youtubeSelfCommentProfile' src={item?.user?.profilePic} />
-                                            {/* Please watch the video for the code} */}
+                        <div className="youtubeSelfComment">
+                            <img className='video_youtubeSelfCommentProfile' src="/images/thumbnail1.jpeg" />
+                            <div className="others_commentSectionHeader">
+                                <div className="channelName_comment">Username</div>
+                                <div className="channelName_comment">2024-09-30</div>
+                            </div>
+
+                            <div className="others_comentSectionComment">
+                                This is a stupid web app and it should be exasperated
+                            </div>
 
 
-                                    </div>
-                                );
-                            })
-                        }
+                         </div>
+                         
+
+                         <div className="youtubeSelfComment">
+                            <img className='video_youtubeSelfCommentProfile' src="/images/thumbnail1.jpeg" />
+                            <div className="others_commentSectionHeader">
+                                <div className="channelName_comment">Username</div>
+                                <div className="channelName_comment">2024-09-30</div>
+                            </div>
+
+                            <div className="others_comentSectionComment">
+                                This is a stupid web app and it should be exasperated
+                            </div>
+
+
+                         </div>
+
+                         <div className="youtubeSelfComment">
+                            <img className='video_youtubeSelfCommentProfile' src="/images/thumbnail1.jpeg" />
+                            <div className="others_commentSectionHeader">
+                                <div className="channelName_comment">Username</div>
+                                <div className="channelName_comment">2024-09-30</div>
+                            </div>
+
+                            <div className="others_comentSectionComment">
+                                This is a stupid web app and it should be exasperated
+                            </div>
+
+
+                         </div>
+
+                         <div className="youtubeSelfComment">
+                            <img className='video_youtubeSelfCommentProfile' src="/images/thumbnail1.jpeg" />
+                            <div className="others_commentSectionHeader">
+                                <div className="channelName_comment">Username</div>
+                                <div className="channelName_comment">2024-09-30</div>
+                            </div>
+
+                            <div className="others_comentSectionComment">
+                                This is a stupid web app and it should be exasperated
+                            </div>
+
+
+                         </div>
+                    
 
 
 
 
                     </div>
                 </div>
+
             </div>
 
             <div className="videoSuggestions">
@@ -169,7 +230,6 @@ const Video = () => {
                 </div>
             </div>
 
-            <ToastContainer/>
 
         </div>
     )
