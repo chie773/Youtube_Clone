@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './signUp.css';
 import YouTubeIcon from '@mui/icons-material/YouTube';
-import { Link,useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify'
 import Box from '@mui/material/Box';
@@ -9,15 +9,15 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 const SignUp = () => {
     const [uploadedImageUrl, setUploadedImageUrl] = useState("https://th.bing.com/th/id/OIP.Wy2uo_y-ttULYs4chLmqSAAAAA?rs=1&pid=ImgDetMain");
-    const [singUpFiled, setSignUpField] = useState({ "channelName": "", "userName": "", "password": "", "about": "", "profilePic": uploadedImageUrl });
+    const [signUpField, setSignUpField] = useState({ "channelName": "", "userName": "", "password": "", "about": "", "profilePic":uploadedImageUrl });
     const [progressBar,setProgressBar] = useState(false);
     const navigate = useNavigate();
-    const handleInputFiled = (event, name) => {
+    const handleInputField = (event, name) => {
         setSignUpField({
-            ...singUpFiled, [name]: event.target.value
+            ...signUpField, [name]: event.target.value
         })
     }
-    console.log(singUpFiled)
+    console.log(signUpField);
 
     const uploadImage = async (e) => {
         console.log("Uploading")
@@ -29,21 +29,31 @@ const SignUp = () => {
         try {
             // cloudName="dhlklhfgj"
             setProgressBar(true)
-            const response = await axios.post("https://api.cloudinary.com/v1_1/dhlklhfgj/image/upload", data)
+            const response = await axios.post(`https://api.cloudinary.com/v1_1/${process.env.REACT_APP_API_KEY}/image/upload`, data)
             setProgressBar(false)
             const imageUrl = response.data.url;
             setUploadedImageUrl(imageUrl);
             setSignUpField({
-                ...singUpFiled, "profilePic": imageUrl
+                ...signUpField, "profilePic": imageUrl
             })
         } catch (err) {
             console.log(err)
         }
-
-
     }
-    const handleSignup = async () => {
-        {/* Please watch the video for the code} */}
+
+    const handleSignUp = async () => {
+        setProgressBar(true);
+        axios.post('http://localhost:4000/auth/signUp', signUpField)
+            .then((res) => {
+
+                toast.success(res.data.message)
+                setProgressBar(false);
+                navigate('/');
+            })
+            .catch((err) => {
+                setProgressBar(false);
+                console.log(err);
+            });
     }
 
 
@@ -58,11 +68,14 @@ const SignUp = () => {
 
                 <div className="signUp_Inputs">
                     
-                    {/* Please watch the video for the code} */}
-
+                    <input type='text' className='signUp_Inputs_inp' value={signUpField.channelName}  onChange={(e)=> handleInputField(e,'channelName')} placeholder='Channel name' />
+                    <input type='text' className='signUp_Inputs_inp' value={signUpField.userName} onChange={(e)=> handleInputField(e,'userName')} placeholder='User Name' />
+                    <input type='password' className='signUp_Inputs_inp' value={signUpField.password} onChange={(e)=> handleInputField(e,'password')} placeholder='Password' />
+                    <input type='text' className='signUp_Inputs_inp' value={signUpField.about} onChange={(e)=> handleInputField(e,'about')} placeholder='About Your Channel' />
+                    
 
                     <div className="image_upload_signup">
-                        <input type='file' onChange={(e) => uploadImage(e)} />
+                        <input type='file' onChange={(e)=>uploadImage(e)}/>
                         <div className='image_upload_signup_div'>
                             <img className='image_default_signUp' src={uploadedImageUrl} />
                         </div>
@@ -70,18 +83,21 @@ const SignUp = () => {
 
 
                     <div className="signUpBtns">
-                        <div className="signUpBtn" onClick={handleSignup}>SignUp</div>
+                        <div className="signUpBtn" onClick={handleSignUp} >SignUp</div>
                         <Link to={'/'} className="signUpBtn">Home Page</Link>
 
                     </div>
 
-                    {progressBar && <Box sx={{ width: '100%' }}>
+                    { progressBar && <Box sx={{ width: '100%' }}>
                         <LinearProgress />
-                    </Box>}
+                        </Box>
+                    }
+            
 
                 </div>
 
             </div>
+
             <ToastContainer />
         </div>
     )

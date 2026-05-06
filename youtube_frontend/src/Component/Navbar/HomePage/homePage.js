@@ -1,8 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import './homePage.css'
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const HomePage = ({sideNavbar}) => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:4000/api/allVideo').then(res => {
+      console.log(res.data.videos)
+      setData(res.data.videos);
+    }).catch(err => {
+      console.log(err);
+    })
+  }, [])
+
+
   const options = ["All", "Twenty20 Cricket", "Music", "Live", "Mixes", "Gaming", "Debates", "Coke Studio Pakistan", "Democracy", "Pakistani dramas", "Comedy", "Pakistani dramas", "Comedy", "Pakistani dramas", "Comedy"];
 
   return (
@@ -21,7 +34,35 @@ const HomePage = ({sideNavbar}) => {
 
       <div className={sideNavbar ? "home_mainPage" : "home_mainPageWithoutLink"}>
 
-        <Link to={'/watch/9875'} className="youtube_Video">
+        {
+          data?.map((item,ind) => {
+            return(
+              <Link to={ `/watch/${item._id}`} className="youtube_Video">
+                <div className="youtube_thumbnaiBox">
+                  <img src={item.thumbnail} className="youtube_thumbnailPic" />
+                  <div className="youtube_timingThumbnail">
+                  </div>
+                </div>
+
+                <div className="youtubeTitleBox">
+                  <div className="youtubeTitleBoxProfile">
+                    <img src={item?.user.profilePic} alt="profile" className="youtube_thumbnail_Profile" />
+                  </div>
+
+                  <div className="youtube_TitleBoxTitle">
+                    <div className="youtube_videoTitle">{item?.title}</div>
+                    <div className="youtube_channelName">{item?.user?.channelName}</div>
+                    <div className="youtubeVideo_views">{item?.like} likes</div>
+
+
+                  </div>
+
+                </div>
+              </Link>
+            )
+          })
+        }
+        {/* <Link to={'/watch/9875'} className="youtube_Video">
           <div className="youtube_thumbnailBox">
             <img src="/images/thumbnail1.jpeg"  className="youtube_thumbnailPic" />
             <div className="youtube_timingThumbnail">
@@ -44,7 +85,7 @@ const HomePage = ({sideNavbar}) => {
               
           </div>
         </Link>
-    
+     */}
         
 
 

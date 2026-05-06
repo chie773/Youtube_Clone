@@ -7,11 +7,17 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 import VideoCallIcon from '@mui/icons-material/VideoCall';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import PersonIcon from '@mui/icons-material/Person';
-import { Link } from 'react-router-dom';
+import { Link , useNavigate} from 'react-router-dom';
+import Login from '../../Login/login';
+import axios from 'axios'
 
 const Navbar = ({setSideNavbarFunc, sideNavbar}) => {
   const [userPic,setUserPic] = useState("https://th.bing.com/th/id/OIP.Wy2uo_y-ttULYs4chLmqSAAAAA?rs=1&pid=ImgDetMain")
   const [navbarModal, setNavbarModal] = useState(false);
+  const [login,setLogin] = useState(false);
+  const [isLoggedIn,setIsLoggedIn] = useState(false)
+  const navigate = useNavigate();
+
 
   const handleClickModal = ()=> {
     setNavbarModal(prev=>!prev);
@@ -19,6 +25,48 @@ const Navbar = ({setSideNavbarFunc, sideNavbar}) => {
 
   const sideNavbarFunc= ()=> {
     setSideNavbarFunc(!sideNavbar);
+  }
+
+  const handleProfile= ()=> {
+    let userId = localStorage.getItem("userId")
+    navigate(`/user/${userId}`);
+    setNavbarModal(false);
+  }
+
+  const setLoginModal=()=>{
+    setLogin(false);
+  }
+
+  useEffect(() => {
+    let userProfilePic = localStorage.getItem("userProfilePic");
+    setIsLoggedIn(localStorage.getItem("userId") !== null ? true : false);
+    if (userProfilePic !== null) {
+      setUserPic(userProfilePic)
+    }
+
+  }, [])
+
+  const onclickOfPopUpOption =(button)=>{
+    setNavbarModal(false);
+
+    if(button==="login"){
+      setLogin(true);
+    }else{
+      localStorage.clear();
+      getLogoutFun();
+      setTimeout(() => {
+        navigate('/')
+        window.location.reload();
+    }, 2000);
+    }
+  }
+
+  const getLogoutFun = async()=>{
+    axios.post("http://localhost:4000/auth/logout",{},{ withCredentials: true}).then((res)=>{
+      console.log("Logout")
+    }).catch(err=>{
+      console.log(err)
+    })
   }
 
   return (
@@ -48,19 +96,26 @@ const Navbar = ({setSideNavbarFunc, sideNavbar}) => {
       </div>
 
       <div className='navbar-right'>
-        <VideoCallIcon sx={{ fontsize: "30px", cursor:"pointer", color:'white'}} />
+        <Link to={'/10/upload'}>
+          <VideoCallIcon sx={{ fontsize: "30px", cursor:"pointer", color:'white'}} />
+        </Link>
+        
         <NotificationsIcon sx={{ fontsize: "30px", cursor:"pointer", color:'white'}} />
         <img onClick={handleClickModal} src={userPic} className='navbar-right-logo' alt='Logo' />
 
         { navbarModal &&
         <div className='navbar-modal'>
-          <div className='navbar-modal-option'> Profile </div>
-          <div className='navbar-modal-option'> Logout </div>
-          <div className='navbar-modal-option'> Login </div>
+          {isLoggedIn && <div className='navbar-modal-option' onClick={handleProfile}> Profile </div>}
+          {isLoggedIn && <div className='navbar-modal-option' onClick={()=> onclickOfPopUpOption("logout")}> Logout </div>}
+          {!isLoggedIn && <div className='navbar-modal-option' onClick={()=> onclickOfPopUpOption("login")}> Login </div>}
         </div>
         }
 
       </div>
+
+      { 
+      login && <Login setLoginModal={setLoginModal}/>
+      }
     </div>
   )
 }

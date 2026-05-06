@@ -3,18 +3,23 @@ import './profile.css';
 import SideNavbar from '../../Component/Navbar/SideNavbar/sideNavbar';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Link, useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const Profile = ({ sideNavbar }) => {
-    // const { id } = useParams();
-    // const [data, setData] = useState([]);
-    // const [user, setUser] = useState(null);
-    // const fetchProfileData = async () => {
-    //     {/* Please watch the video for the code} */}
+    const { id } = useParams();
+    const [data, setData] = useState([]);
+    const [user, setUser] = useState(null);
+    const fetchProfileData = async () => {
+        axios.get(`http://localhost:4000/api/${id}/channel`).then((response) =>{
+            console.log(response);
+            setData(response.data.video);
+            setUser(response.data.video[0]?.user);
+        })
 
-    // }
-    // useEffect(() => {
-    //     fetchProfileData()
-    // }, [])
+    }
+    useEffect(() => {
+        fetchProfileData()
+    }, [])
 
     return (
         <div className='profile'>
@@ -26,16 +31,14 @@ const Profile = ({ sideNavbar }) => {
                         <img className='profile_top_section_img' src="" alt="" />
                     </div>
                     <div className="profile_top_section_About">
-                        <div className="profile_top_section_About_Name">Chie773</div>
+                        <div className="profile_top_section_About_Name">{user?.channelName}</div>
                         <div className="profile_top_section_info">
-                            @User1 . 4 Videos
+                            {user?.userName}. {data.length} videos
                         </div>
 
                         <div className="profile_top_section_info">
-                            About Section of channel
+                            {user?.about}
                         </div>
-
-
                     </div>
                 </div>
 
@@ -43,44 +46,26 @@ const Profile = ({ sideNavbar }) => {
                     <div className="profile_videos_title">Videos &nbsp; <ArrowRightIcon /></div>
 
                     <div className="profileVideos">
-                        <Link to={'/watch/8998'} className="profileVideo_block">
-                            <div className="profileVideo_block_thumbnail">
-                                <img className="profileVideo_block_thumbnail_img" src="https://static.vecteezy.com/system/resources/previews/051/261/577/large_2x/person-coding-on-a-laptop-with-vibrant-programming-code-on-the-screen-photo.jpeg" />
-                            
-                            </div>
 
-                            <div className="profileVideo_block_detail">
-                                <div className="profileVideo_block_detail_name">Biggest Coding Skills You Should Have in 2021</div>
-                                <div className="profileVideo_block_detail_about">Created on 2026-01-01</div>
+                        {
+                            data?.map((item, key) => {
+                                return (
+                                    <Link to={`/watch/${item._id}`} className="profileVideo_block">
+                                        <div className="profileVideo_block_thumbnail">
+                                            <img className="profileVideo_block_thumbnail_img" src={item?.thumbnail} />
 
-                            </div>
-                        </Link>
+                                        </div>
 
-                        <Link to={'/watch/8999'} className="profileVideo_block">
-                            <div className="profileVideo_block_thumbnail">
-                                <img className="profileVideo_block_thumbnail_img" src="https://static.vecteezy.com/system/resources/previews/051/261/577/large_2x/person-coding-on-a-laptop-with-vibrant-programming-code-on-the-screen-photo.jpeg" />
-                            
-                            </div>
+                                        <div className="profileVideo_block_detail">
+                                            <div className="profileVideo_block_detail_name">{item?.title}</div>
+                                            <div className="profileVideo_block_detail_about">Created On {item?.createdAt.slice(0,10)}</div>
 
-                            <div className="profileVideo_block_detail">
-                                <div className="profileVideo_block_detail_name">Biggest Coding Skills You Should Have in 2021</div>
-                                <div className="profileVideo_block_detail_about">Created on 2026-01-01</div>
+                                        </div>
+                                    </Link>
+                                )
+                            })
+                        }
 
-                            </div>
-                        </Link>
-
-                        <Link to={'/watch/9000'} className="profileVideo_block">
-                            <div className="profileVideo_block_thumbnail">
-                                <img className="profileVideo_block_thumbnail_img" src="https://static.vecteezy.com/system/resources/previews/051/261/577/large_2x/person-coding-on-a-laptop-with-vibrant-programming-code-on-the-screen-photo.jpeg" />
-                            
-                            </div>
-
-                            <div className="profileVideo_block_detail">
-                                <div className="profileVideo_block_detail_name">Biggest Coding Skills You Should Have in 2021</div>
-                                <div className="profileVideo_block_detail_about">Created on 2026-01-01</div>
-
-                            </div>
-                        </Link>
                     </div>
                     
 
