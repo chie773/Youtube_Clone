@@ -24,13 +24,20 @@ const VideoUpload = () => {
         // youtube-clone
         data.append('upload_preset', 'youtube-clone');
         try {
-            // cloudName="dhlklhfgj"
-            
-            {/* Please watch the video for the code} */}
+            const res = await axios.post(
+                `https://api.cloudinary.com/v1_1/daargosdm/auto/upload`,
+                data
+            );
 
+            const uploadedUrl = res.data.secure_url;
 
+            if (type === 'image') {
+                setInputField(prev => ({ ...prev, thumbnail: uploadedUrl }));
+            } else {
+                setInputField(prev => ({ ...prev, videoLink: uploadedUrl }));
+            }
 
-
+            setLoader(false);
         } catch (err) {
             setLoader(false)
             console.log(err)
@@ -47,8 +54,19 @@ const VideoUpload = () => {
     },[])
     console.log(inputField)
     const handleSubmitFunc = async()=>{
-        {/* Please watch the video for the code} */}
-
+        const userId = localStorage.getItem('userId');
+        try {
+            await axios.post('http://localhost:5000/api/videos', {
+                title: inputField.title,
+                description: inputField.description,
+                videoLink: inputField.videoLink,
+                thumbnail: inputField.thumbnail,
+                userId: userId,
+            });
+            navigate('/');
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     
@@ -62,7 +80,30 @@ const VideoUpload = () => {
                 </div>
 
                 <div className="uploadForm">
-                    {/* Please watch the video for the code} */}
+                    <input
+                        type="text"
+                        placeholder="Title"
+                        className="uploadInput"
+                        onChange={(e) => handleOnChangeInput(e, 'title')}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Description"
+                        className="uploadInput"
+                        onChange={(e) => handleOnChangeInput(e, 'description')}
+                    />
+                    <label>Thumbnail Image</label>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => uploadImage(e, 'image')}
+                    />
+                    <label>Video File</label>
+                    <input
+                        type="file"
+                        accept="video/*"
+                        onChange={(e) => uploadImage(e, 'video')}
+                    />
 
                     {
                     loader && <Box sx={{ display: 'flex' }}>
