@@ -1,0 +1,34 @@
+{
+  "name": "youtube_clone",
+  "version": "1.0.0",
+  "description": "This is our 369 Project",
+  "homepage": "https://github.com/chie773/Youtube_Clone#readme",
+  "bugs": {
+    "url": "https://github.com/chie773/Youtube_Clone/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chie773/Youtube_Clone.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "backend": "nodemon index.js",
+    "frontend": "npm start --prefix youtube_frontend",
+    "start": "concurrently \"npm run backend\" \"npm run frontend\""
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "concurrently": "^9.2.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "fs": "^0.0.1-security",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.6.1",
+    "nodemon": "^3.1.14",
+    "path": "^0.12.7"
+  }
+}

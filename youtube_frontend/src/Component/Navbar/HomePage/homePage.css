@@ -1,7 +1,7 @@
 .fullHomePage {
     display: flex;
     flex-direction: column;
-    
+    overflow-x: hidden;
     flex: 1;
     min-height: 100vh;
 }
@@ -17,7 +17,7 @@
 
 .homePage_options {
     display: flex;
-    position: fixed;
+    position: sticky;
     top: 56px;
     z-index: 1;
     width: 100%;

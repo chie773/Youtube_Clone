@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react'
 import './video.css';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbDownAltOutlinedIcon from '@mui/icons-material/ThumbDownAltOutlined';
-import { Link } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
-import {toast,ToastContainer} from 'react-toastify'
+import { toast, ToastContainer } from 'react-toastify'
+
+
 const Video = () => {
     const [message, setMessage] = useState("");
     const [data, setData] = useState(null);
@@ -13,7 +14,7 @@ const Video = () => {
     const { id } = useParams();
     const [comments, setComments] = useState([]);
 
-    const fetchVedioById = async () => {
+    const fetchVideoById = async () => {
         await axios.get(`http://localhost:4000/api/getVideoById/${id}`).then((response) => {
             console.log(response.data.video);
             setData(response.data.video)
@@ -32,7 +33,7 @@ const Video = () => {
         })
     }
     useEffect(() => {
-        fetchVedioById();
+        fetchVideoById();
         getCommentByVideoId();
     }, [])
 
@@ -48,16 +49,23 @@ const Video = () => {
             setMessage("")
         }).catch(err=>{
             toast.error("Please Login First to comment")
+            console.log("Login Bum");
         })
     }
     return (
         <div className='video'>
-            <div className="videoPostSection">
-                <div className="video_youtube">
-                    {data && <video width="400" controls autoPlay className='video_youtube_video'>
+            <div className='videoPostSection>'>
+                <div className='video_youtube'>
+                    { data && 
+                        <video width="400" controls autoPlay className='video_youtube_video'>
 
-                        {/* Please watch the video for the code} */}
-                    </video>}
+                        <source src={videoUrl} type='video/mp4' />
+                        <source src={videoUrl} type='video/webm' />
+
+
+                        Your browser does not support the video tag
+                        </video>
+                    }
 
                 </div>
 
@@ -66,28 +74,31 @@ const Video = () => {
 
                     <div className="youtube_video_ProfileBlock">
                         <div className="youtube_video_ProfileBlock_left">
-                            <Link to={`/user/${data?.user?._id}`} className="youtube_video_ProfileBlock_left_img">
+                            <Link to={`/User/${data?.user?._id}`} className='youtube_video_ProfileBlock_left_img'>
                                 <img className='youtube_video_ProfileBlock_left_image' src={data?.user?.profilePic} />
-                            </Link>
+                            </Link> 
+                            
                             <div className="youtubeVideo_subsView">
                                 <div className="youtubePostProfileName"> {data?.user?.channelName} </div>
-                                <div className="youtubePostProfileSubs">{data?.user?.createdAt.slice(0, 10)}</div>
+                                <div className="youtubePostProfileSubs">{data?.user?.createdAt.slice(0,10)}</div>
                             </div>
                             <div className="subscribeBtnYoutube">Subscribe</div>
                         </div>
 
                         <div className="youtube_video_likeBlock">
-                            {/* Please watch the video for the code} */}
-
-
-
+                            <ThumbUpOutlinedIcon />
+                            <div className='youtube_video_likeBlock_NoOfLikes'>{data?.like}</div>
                         </div>
+                        <div className="youtubeVideoDivider"></div>
 
+                        <div className="youtube_video_likeBlock">
+                            <ThumbDownAltOutlinedIcon />
+                        </div>
 
                     </div>
 
                     <div className="youtube_video_About">
-                        <div>{data?.createdAt.slice(0, 10)}</div>
+                        <div>{data?.createdAt.slice(0,10)}</div>
                         <div>{data?.description}</div>
                     </div>
                 </div>
@@ -96,30 +107,52 @@ const Video = () => {
                     <div className="youtubeCommentSectionTitle">{comments.length} Comments</div>
 
                     <div className="youtubeSelfComment">
-                        {/* Please watch the video for the code} */}
+                        <img className='video_youtubeSelfCommentProfile' src="/images/thumbnail1.jpeg" />
+                        <div className='addAComment'>
+                            <input type='text' value={message} onChange={(e) =>{setMessage(e.target.value)}} className='addAcommentInput' placeholder='Add a comment' />
+
+                            <div className='cancelSubmitComment'>
+                                <div className="cancelComment">Cancel</div>
+                                <div className="cancelComment" onClick={handleComment}>Comment</div>
+                                
+
+                            </div>
+
+
+                        </div>
 
                     </div>
 
                     <div className="youtubeOthersComments">
 
                         {
-                            comments.map((item, index) => {
+                            comments.map((item, index)=>{
                                 return (
                                     <div className="youtubeSelfComment">
-                                        <img className='video_youtubeSelfCommentProfile' src={item?.user?.profilePic} />
-                                            {/* Please watch the video for the code} */}
+                                        <img className='video_youtubeSelfCommentProfile' src={data?.user?.profilePic} />
+                                        <div className="others_commentSectionHeader">
+                                            <div className="channelName_comment">{item?.user?.channelName}</div>
+                                            <div className="channelName_comment">{item?.createdAt.slice(0,10)}</div>
+                                        </div>
+
+                                        <div className="others_comentSectionComment">
+                                            {item?.message}
+                                        </div>
 
 
                                     </div>
-                                );
+                                )
+
                             })
                         }
 
 
 
 
+
                     </div>
                 </div>
+
             </div>
 
             <div className="videoSuggestions">
@@ -169,7 +202,8 @@ const Video = () => {
                 </div>
             </div>
 
-            <ToastContainer/>
+            <ToastContainer />
+
 
         </div>
     )
